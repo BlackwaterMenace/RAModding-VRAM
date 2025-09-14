@@ -1,5 +1,4 @@
 extends Node
-class_name VRAM_SkinsManager
 
 #region Backend (Collapse this)
 
@@ -7,8 +6,8 @@ const HAS_INITIALIZED_BEFORE_KEY = "has_initialized_before"
 const PLAYER_SKINS_KEY = "player_skins"
 const SKINS_UNLOCK_FLAGS_KEY = "skins_unlock_flags"
 
-static var bot_skins := {}
-static var player_skins := {
+var bot_skins := {}
+var player_skins := {
 	Enemy.EnemyType.SHOTGUN	: "0",
 	Enemy.EnemyType.CHAIN	: "0",
 	Enemy.EnemyType.FLAME	: "0",
@@ -18,10 +17,10 @@ static var player_skins := {
 	Enemy.EnemyType.ARCHER	: "0",
 	Enemy.EnemyType.BAT		: "0",
 }
-static var skins_unlock_flags = {
+var skins_unlock_flags = {
 	"unlocked_by_default" : true,
 } # NOTE: If Router high-vis or medic skins are ever made available, the id for Bulk Delivery will need to be updated
-static var upgrade_skins := {
+var upgrade_skins := {
 	Enemy.EnemyType.SHOTGUN: {
 		"soldering_fingers" : "1",
 		"induction_barrel" : "2",
@@ -52,13 +51,13 @@ static var upgrade_skins := {
 }
 
 
-static func setup():
-	ModLoaderLog.info("Setting up SkinsManager...", "RAModding-VRAM")
-	VRAM_SaveSystem.register_mod("RAModding-VRAM-SkinsManager", VRAM_SkinsManager.serialize, VRAM_SkinsManager.deserialize)
+func _ready():
+	ModLoaderLog.info("SkinsManager Ready!", "RAModding-VRAM")
+	Engine.get_singleton("VRAM_SaveSystem").register_mod("RAModding-VRAM-SkinsManager", self.serialize, self.deserialize)
 	port_vanilla_skins()
 	ModLoaderLog.info("Finished setting up SkinsManager.", "RAModding-VRAM")
 
-static func port_vanilla_skins():
+func port_vanilla_skins():
 	ModLoaderLog.debug("Porting vanilla skins...", "RAModding-VRAM")
 	await Progression.ready
 	
@@ -68,7 +67,7 @@ static func port_vanilla_skins():
 	
 	ModLoaderLog.debug("Finished porting vanilla skins.", "RAModding-VRAM")
 
-static func port_vanilla_main_skins():
+func port_vanilla_main_skins():
 	for curr_bot_type in Enemy.PlayableEnemyType:
 		if !bot_skins.has(curr_bot_type):
 			bot_skins[curr_bot_type] = {}
@@ -89,7 +88,7 @@ static func port_vanilla_main_skins():
 	for i in range(Progression.epitaph_skins.size()):
 		bot_skins[Enemy.EnemyType.BAT]["%s" % i] = Progression.epitaph_skins[i]
 
-static func port_thistle_bows():
+func port_thistle_bows():
 	bot_skins[Enemy.EnemyType.ARCHER]["0"]["secondary_sprite_sheet_path"] = "res://Art/Characters/hermitarcherRAM/spritesheet bow.png"
 	bot_skins[Enemy.EnemyType.ARCHER]["1"]["secondary_sprite_sheet_path"] = "res://Art/Characters/hermitarcherRAM/bow colour2.png"
 	bot_skins[Enemy.EnemyType.ARCHER]["2"]["secondary_sprite_sheet_path"] = "res://Art/Characters/hermitarcherRAM/bow colour3.png"
@@ -98,25 +97,25 @@ static func port_thistle_bows():
 	bot_skins[Enemy.EnemyType.ARCHER]["5"]["secondary_sprite_sheet_path"] = "res://Art/Characters/hermitarcherRAM/WhiteandRedBow1.png"
 	bot_skins[Enemy.EnemyType.ARCHER]["6"]["secondary_sprite_sheet_path"] = "res://Art/Characters/hermitarcherRAM/bow colour2.png"
 
-static func port_epitaph_bats():
+func port_epitaph_bats():
 	bot_skins[Enemy.EnemyType.BAT]["0"]["secondary_sprite_sheet_path"] = "res://Art/Characters/bot8 RAM/Batter's Bat Static.png"
 	bot_skins[Enemy.EnemyType.BAT]["1"]["secondary_sprite_sheet_path"] = "res://Art/Characters/bot8 RAM/dark skin Bat Static.png"
 	bot_skins[Enemy.EnemyType.BAT]["2"]["secondary_sprite_sheet_path"] = "res://Art/Characters/bot8 RAM/Batter's Bat Static.png"
 	bot_skins[Enemy.EnemyType.BAT]["3"]["secondary_sprite_sheet_path"] = "res://Art/Characters/bot8 RAM/Batter's Bat Static.png"
 	bot_skins[Enemy.EnemyType.BAT]["4"]["secondary_sprite_sheet_path"] = "res://Art/Characters/bot8 RAM/purple skin Bat Static.png"
 	bot_skins[Enemy.EnemyType.BAT]["5"]["secondary_sprite_sheet_path"] = "res://Art/Characters/bot8 RAM/Batter's Bat Static.png"
-	bot_skins[Enemy.EnemyType.BAT]["6"]["secondary_sprite_sheet_path"] = "res://Art/Characters/bot8 RAM/Batter's Bat Static White.png"
+	bot_skins[Enemy.EnemyType.BAT]["6"]["secondary_sprite_sheet_path"] = "res://Art/Characters/bot8 RAM/Batter's Bat White.png"
 
 #region DE/SER
 
-static func serialize() -> Dictionary:
+func serialize() -> Dictionary:
 	ModLoaderLog.debug("SkinsManager Serialize", "RAModding-VRAM")
 	return {
 		PLAYER_SKINS_KEY : serialize_player_skins(),
 		SKINS_UNLOCK_FLAGS_KEY : serialize_skins_unlock_flags(),
 	}
 
-static func deserialize(save_data: Dictionary):
+func deserialize(save_data: Dictionary):
 	ModLoaderLog.debug("SkinsManager Deserialize", "RAModding-VRAM")
 	if save_data.has(PLAYER_SKINS_KEY) && save_data.has(SKINS_UNLOCK_FLAGS_KEY):
 		deserialize_player_skins(save_data[PLAYER_SKINS_KEY])
@@ -124,19 +123,19 @@ static func deserialize(save_data: Dictionary):
 	else:
 		initialize_save_data_from_vanilla()
 
-static func serialize_player_skins() -> Dictionary:
+func serialize_player_skins() -> Dictionary:
 	var result = {}
 	for curr_bot_type in player_skins:
 		result[Enemy.ENEMY_NAME[curr_bot_type]] = player_skins[curr_bot_type]
 	return result
 
-static func serialize_skins_unlock_flags() -> Dictionary:
+func serialize_skins_unlock_flags() -> Dictionary:
 	var result = {}
 	for curr_skin_unlock_flag in skins_unlock_flags:
 		result[curr_skin_unlock_flag] = skins_unlock_flags[curr_skin_unlock_flag]
 	return result
 
-static func deserialize_player_skins(save_data: Dictionary):
+func deserialize_player_skins(save_data: Dictionary):
 	# Swap keys and values of Enemy.ENEMY_NAME to get the Enemy.EnemyType from the string in save_data
 	var enemy_name_to_enemy_type_converter = {}
 	for curr_bot in Enemy.PlayableEnemyType:
@@ -146,17 +145,17 @@ static func deserialize_player_skins(save_data: Dictionary):
 	for curr_enemy_title in save_data:
 		player_skins[enemy_name_to_enemy_type_converter[curr_enemy_title]] = "%s" % save_data[curr_enemy_title]
 
-static func deserialize_skins_unlock_flags(save_data: Dictionary):
+func deserialize_skins_unlock_flags(save_data: Dictionary):
 	for curr_skin_unlock_flag in save_data:
 		skins_unlock_flags[curr_skin_unlock_flag] = save_data[curr_skin_unlock_flag]
 
 #endregion
 
-static func initialize_save_data_from_vanilla():
+func initialize_save_data_from_vanilla():
 	port_vanilla_skin_unlock_flags()
 	port_player_skins()
 
-static func port_vanilla_skin_unlock_flags():
+func port_vanilla_skin_unlock_flags():
 	await Progression.ready
 	for curr_skin in Progression.all_skins:
 		var curr_skin_unlock_flag = curr_skin.get("unlock_flag")
@@ -168,7 +167,7 @@ static func port_vanilla_skin_unlock_flags():
 			if is_skin_unlocked:
 				ModLoaderLog.success("%s: UNLOCKED!" % curr_skin_unlock_flag, "RAModding-VRAM")
 
-static func port_player_skins():
+func port_player_skins():
 	player_skins[Enemy.EnemyType.ARCHER]	= "%s" % SaveManager.settings.thistle_skin
 	player_skins[Enemy.EnemyType.BAT]		= "%s" % SaveManager.settings.epitaph_skin
 	player_skins[Enemy.EnemyType.CHAIN]		= "%s" % SaveManager.settings.deadlift_skin
@@ -178,18 +177,18 @@ static func port_player_skins():
 	player_skins[Enemy.EnemyType.SHOTGUN]	= "%s" % SaveManager.settings.steeltoe_skin
 	player_skins[Enemy.EnemyType.WHEEL]		= "%s" % SaveManager.settings.router_skin
 
-static func get_skins_ids(bot_id: Enemy.EnemyType) -> Array:
+func get_skins_ids(bot_id: Enemy.EnemyType) -> Array:
 	var skins_keys: Array = bot_skins[bot_id].keys()
-	skins_keys.sort_custom(VRAM_SkinsManager.sort_skins_keys)
+	skins_keys.sort_custom(Engine.get_singleton("VRAM_SkinsManager").sort_skins_keys)
 	return skins_keys
 
-static func get_skins_list(bot_id: Enemy.EnemyType) -> Array:
+func get_skins_list(bot_id: Enemy.EnemyType) -> Array:
 	var result = []
 	for curr_skin_key in get_skins_ids(bot_id):
 		result.append(bot_skins[bot_id][curr_skin_key])
 	return result
 
-static func sort_skins_keys(a, b):
+func sort_skins_keys(a, b):
 	var type_a = typeof(a)
 	var type_b = typeof(b)
 	
@@ -209,7 +208,8 @@ static func sort_skins_keys(a, b):
 			return false
 	return type_a < type_b
 
-static func floor_puzzle_completed():
+func floor_puzzle_completed():
+	await Progression.ready
 	var skin_key = "%s" % (Progression.router_skins.size() - 1)
 	bot_skins[Enemy.EnemyType.WHEEL][skin_key] = Progression.router_skins[Progression.router_skins.size() - 1]
 
@@ -232,7 +232,7 @@ static func floor_puzzle_completed():
 ## * secondary_spritesheet_path:	Path to the secondary spritesheet, if applicable. Used for Deadlift arms, Aphid nozzles, Thistle bows, and Epitaph bats.
 ## * unlock_flag: 					Name of the flag controlling whether the skin is locked or unlocked. Should be unique to your mod, though not necessarily unique across all skins within a single mod. Suggested format: {namespace}_{mod name}_{fla name}
 ## * extra_data:					Additional data. Only used for mods.
-static func register_skin(
+func register_skin(
 	bot_id: Enemy.EnemyType,
 	skin_id: String,
 	skin_name: String,
@@ -266,15 +266,15 @@ static func register_skin(
 ## Gets a Dictionary containing all data for the specified bot, or the bot with skin_id = "0". Specific fields should be accessed by the dict's keys.
 ## Assumes that some skin has been registered with skin_id = "0". This is the case for all vanilla bots. Bots added with mods should also do this.
 ## Further assumes that bot_id represents a bot that has had at least one skin registered, including all vanilla bots.
-static func get_skin_or_default(bot_id: Enemy.EnemyType, skin_id: String) -> Dictionary:
-	return bot_skins[bot_id][skin_id]
+func get_skin_or_default(bot_id: Enemy.EnemyType, skin_id: String) -> Dictionary:
+	return bot_skins[bot_id].get(skin_id, bot_skins[bot_id]["0"])
 
 ## Sets the player's skin to skin_id for the specified bot.
 ## 
 ## Sets the specified bot's skin to the skin with the specified skin_id for the player.
 ## If no skin with the specified skin_id was found for that bot, does nothing.
 ## Does not actually change the player's skin in-game until handle_skin() is called on the player bot.
-static func set_player_skin(bot_id: Enemy.EnemyType, skin_id: String):
+func set_player_skin(bot_id: Enemy.EnemyType, skin_id: String):
 	if skin_id in bot_skins[bot_id]:
 		player_skins[bot_id] = skin_id
 		var skin_id_as_int = int(skin_id)
@@ -302,14 +302,14 @@ static func set_player_skin(bot_id: Enemy.EnemyType, skin_id: String):
 ##
 ## Returns the skin_id for the player for the specified bot type.
 ## To get the actual player skin, use this as the skin_id for get_skin_or_default.
-static func get_player_skin_id(bot_id: Enemy.EnemyType) -> String:
+func get_player_skin_id(bot_id: Enemy.EnemyType) -> String:
 	return player_skins[bot_id]
 
 ## Makes it so that Elites with the specified upgrade have the specified skin.
 ## 
 ## Registers a skin with an upgrade such that Elites with the specified upgrade use the specified skin.
 ## Supports both vanilla and mod skins and upgrades.
-static func register_upgrade_skin(bot_id: Enemy.EnemyType, upgrade_id: String, skin_id: String):
+func register_upgrade_skin(bot_id: Enemy.EnemyType, upgrade_id: String, skin_id: String):
 	upgrade_skins[bot_id][upgrade_id] = skin_id
 
 ## Unlocks skins associated with the specified flag.
@@ -317,7 +317,7 @@ static func register_upgrade_skin(bot_id: Enemy.EnemyType, upgrade_id: String, s
 ## Unlocks all locked skins that use the specified save flag, and shows a popup for the first skin that is unlocked.
 ## More specifically, sets the specified flag to true and shows the popup.
 ## Does nothing if the flag is already unlocked.
-static func unlock_skin(unlock_flag: String):
+func unlock_skin(unlock_flag: String):
 	if GameManager.game_mode == GameManager.GameMode.TEST: return
 	if SaveManager.global_progression.progression_flags.get(unlock_flag, false) || skins_unlock_flags.get(unlock_flag, false): return
 	
@@ -336,5 +336,5 @@ static func unlock_skin(unlock_flag: String):
 ## Returns whether the specified skin unlock flag is raised. All bots that use that flag are unlocked if it returns true
 ## Checks both the vanilla flags and the SkinsManager unlock system. If it is unlocked in either, returns true.
 ## Returns false if the flag cannot be found.
-static func is_skin_unlocked(unlock_flag: String) -> bool:
+func is_skin_unlocked(unlock_flag: String) -> bool:
 	return skins_unlock_flags.get(unlock_flag, false) || SaveManager.global_progression.progression_flags.get(unlock_flag, false)

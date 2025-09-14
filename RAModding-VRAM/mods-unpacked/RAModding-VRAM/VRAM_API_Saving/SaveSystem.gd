@@ -1,27 +1,26 @@
 extends Node
-class_name VRAM_SaveSystem
 
 const SAVES_DIR_PATH = "user://mod_saves"
 
 #region Backend (Collapse this)
 
-static var mods_data = {}
-static var serializers = {}
-static var deserializers = {}
+var mods_data = {}
+var serializers = {}
+var deserializers = {}
 
-static func serialize() -> Dictionary:
+func serialize() -> Dictionary:
 	return mods_data
 
-static func deserialize(save_data: Dictionary):
+func deserialize(save_data: Dictionary):
 	mods_data = save_data
 
-static func load_saves():
+func load_saves():
 	ModLoaderLog.info("Reading saves...", "RAModding-VRAM")
 	for curr_mod_id in deserializers:
 		load_save(curr_mod_id)
 	ModLoaderLog.info("Finished reading saves.", "RAModding-VRAM")
 
-static func load_save(mod_id):
+func load_save(mod_id):
 	ModLoaderLog.debug("Reading save for %s" % mod_id, "RAModding-VRAM")
 	var save_file = FileAccess.open(SAVES_DIR_PATH.path_join("%s.json" % mod_id), FileAccess.READ)
 	var parsed_save_data = {}
@@ -31,7 +30,7 @@ static func load_save(mod_id):
 		ModLoaderLog.info("Could not find any existing save for %s." % [mod_id, FileAccess.get_open_error()], "RAModding-VRAM")
 	deserializers[mod_id].call(parsed_save_data)
 
-static func parse(save_file: FileAccess) -> Dictionary:
+func parse(save_file: FileAccess) -> Dictionary:
 	var json = JSON.new()
 	var parse_success
 	if is_instance_valid(save_file):
@@ -42,7 +41,7 @@ static func parse(save_file: FileAccess) -> Dictionary:
 		ModLoaderLog.error("VRAM: Could not parse save file at %s" % save_file.get_path_absolute(), "RAModding-VRAM")
 	return json.get_data()
 
-static func write_saves():
+func write_saves():
 	ModLoaderLog.info("Writing saves...", "RAModding-VRAM")
 	var dir_access = DirAccess.open(SAVES_DIR_PATH)
 	if !dir_access:
@@ -53,7 +52,7 @@ static func write_saves():
 		write_save(curr_mod_id, mod_data)
 	ModLoaderLog.info("Finished writing saves.", "RAModding-VRAM")
 
-static func write_save(mod_id: String, mod_data: Dictionary):
+func write_save(mod_id: String, mod_data: Dictionary):
 	ModLoaderLog.debug("Writing save for %s" % mod_id, "RAModding-VRAM")
 	var save_file = FileAccess.open(SAVES_DIR_PATH.path_join("%s.json" % mod_id), FileAccess.WRITE)
 	save_file.store_string(JSON.stringify(mod_data, '\t'))
@@ -92,15 +91,17 @@ static func write_save(mod_id: String, mod_data: Dictionary):
 ## The deserializer should take only a Dictionary as a parameter and return nothing.
 ## 
 ## Note: mods that use the "set_or_add_data(mod_id, key, value)" and "get_data_or_default(mod_id, key, default)" methods should also use them when serializing or deserializing.
-static func register_mod(mod_id: String, serializer: Callable, deserializer: Callable):
+func register_mod(mod_id: String, serializer: Callable, deserializer: Callable):
+	ModLoaderLog.info("Registering %s..." % mod_id, "RAModding-VRAM")
 	serializers[mod_id] = serializer
 	deserializers[mod_id] = deserializer
+	ModLoaderLog.info("Finished registering %s" % mod_id, "RAModding-VRAM")
 
 ## Sets or adds a save flag with the specified value for the specified mod.
 ##
 ## Registers a save flag for the specified mod with the specified access key and value, or sets the flag if it is already registered.
 ## Unless you are editing a flag from a dependency, mod_id should always be the same across all invocations in your specific mod.
-static func set_or_add_data(mod_id: String, key: String, value: Variant):
+func set_or_add_data(mod_id: String, key: String, value: Variant):
 	if mods_data[mod_id] == null:
 		mods_data[mod_id] = {}
 	mods_data[mod_id][key] = value
@@ -109,7 +110,7 @@ static func set_or_add_data(mod_id: String, key: String, value: Variant):
 ## 
 ## Gets the save flag registered with the specified key and mod_id, or the specified default if no such flag was registered.
 ## Unless you are retrieving a flag from a dependency, mod_id should always be the same across all invocations in your specific mod.
-static func get_data_or_default(mod_id: String, key: String, default: Variant):
+func get_data_or_default(mod_id: String, key: String, default: Variant):
 	if mods_data[mod_id] == null:
 		return default
 	return mods_data[mod_id].get(key, default)

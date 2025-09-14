@@ -1,6 +1,6 @@
 ## VRAM (Various RAM APIs for Modding) - RAModding
 # Introduction
-VRAM is a set of APIs, accessed through global classes, designed to:
+VRAM is a set of APIs, accessed through custom singleton classes, designed to:
 * Standardize RAM mods to have minimal conflicts
 * Massively simplify the creation of basic mods
 * Offer tools for making larger-scale mods

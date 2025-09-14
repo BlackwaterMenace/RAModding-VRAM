@@ -14,6 +14,7 @@ func _init() -> void:
 	# Add extensions
 	install_script_extensions()
 	install_script_hook_files()
+	install_singletons()
 
 func install_script_extensions() -> void:
 	extensions_dir_path = mod_dir_path.path_join("extensions")
@@ -46,6 +47,13 @@ func install_script_hook_files() -> void:
 	ModLoaderMod.install_script_hooks("res://Scripts/Hosts/ShotgunBot/ShotgunBot.gd", extensions_dir_path.path_join("Scripts/Hosts/ShotgunBot/ShotgunBot.hooks.gd"))
 	ModLoaderMod.install_script_hooks("res://Scripts/Hosts/BatBot/BatBot.gd", extensions_dir_path.path_join("Scripts/Hosts/BatBot/BatBot.hooks.gd"))
 
+func install_singletons():
+	var save_system =	load("res://mods-unpacked/RAModding-VRAM/VRAM_API_Saving/SaveSystem.gd").new()
+	var skins_manager =	load("res://mods-unpacked/RAModding-VRAM/VRAM_API_Skins/SkinsManager.gd").new()
+	Engine.register_singleton("VRAM_SaveSystem", save_system)
+	Engine.register_singleton("VRAM_SkinsManager", skins_manager)
+	add_child(save_system)
+	add_child(skins_manager)
+
 func _ready() -> void:
 	ModLoaderLog.info("Ready", LOG_NAME)
-	VRAM_SkinsManager.setup()
