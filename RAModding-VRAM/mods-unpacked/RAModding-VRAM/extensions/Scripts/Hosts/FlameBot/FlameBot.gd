@@ -1,6 +1,7 @@
 extends "res://Scripts/Hosts/FlameBot/FlameBot.gd"
 
 func handle_skin():
+	enemy_fx.get_node("CASHParticles").emitting = false
 	if not override_skin.is_empty():
 		sprite.texture = Util.get_cached_texture(override_skin)
 		nozzle_sprite.texture = Util.get_cached_texture(nozzle_textures[override_skin])
@@ -17,6 +18,7 @@ func handle_skin():
 				return
 	elif is_player:
 		set_skin_from_skin_manager(Engine.get_singleton("VRAM_SkinsManager").get_player_skin_id(Enemy.EnemyType.FLAME))
+		enemy_fx.get_node("CASHParticles").emitting = Engine.get_singleton("VRAM_SkinsManager").get_player_skin_id(Enemy.EnemyType.FLAME).contains("CASH")
 		return
 	set_skin_from_skin_manager("0") # Handle normal enemies
 

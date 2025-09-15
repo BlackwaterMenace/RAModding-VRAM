@@ -1,6 +1,7 @@
 extends "res://Scripts/Hosts/SaberBot/SaberBot.gd"
 
 func handle_skin():
+	enemy_fx.get_node("CASHParticles").emitting = false
 	if not override_skin.is_empty():
 		set_skin_from_skin_manager("%s" % (Progression.tachi_skins.size() - 1))
 		return
@@ -13,6 +14,7 @@ func handle_skin():
 	elif is_player:
 		if GameManager.player_tachi_skin_path != "":
 			set_skin_from_skin_manager(Engine.get_singleton("VRAM_SkinsManager").get_player_skin_id(Enemy.EnemyType.SABER))
+			enemy_fx.get_node("CASHParticles").emitting = Engine.get_singleton("VRAM_SkinsManager").get_player_skin_id(Enemy.EnemyType.SABER).contains("CASH")
 			return
 	set_skin_from_skin_manager("0")
 

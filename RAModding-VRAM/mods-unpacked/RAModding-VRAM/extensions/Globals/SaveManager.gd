@@ -12,7 +12,11 @@ var has_loaded_save_data = false
 func _ready():
 	ModLoaderLog.debug("SaveManager Ready!", "RAModding-VRAM")
 	var VRAM_SS = Engine.get_singleton("VRAM_SaveSystem")
-	VRAM_SS.register_mod("RAModding-VRAM-SaveSystem", VRAM_SS.serialize, VRAM_SS.deserialize)
+	VRAM_SS.register_mod(
+		"RAModding-VRAM-SaveSystem",
+		Callable(VRAM_SS, "serialize"),
+		Callable(VRAM_SS, "deserialize")
+	)
 	super()
 
 

@@ -4,7 +4,7 @@ func handle_skin(chain: ModLoaderHookChain):
 	var base_obj = chain.reference_object as ChainBot
 	
 	if base_obj.ignore_skin: return
-	
+	base_obj.enemy_fx.get_node("CASHParticles").emitting = false
 	if not base_obj.upgrades.is_empty(): # Handle Elites
 		for curr_upgrade in base_obj.upgrades:
 			var skin_id = Engine.get_singleton("VRAM_SkinsManager").upgrade_skins[Enemy.EnemyType.CHAIN].get(curr_upgrade)
@@ -13,6 +13,7 @@ func handle_skin(chain: ModLoaderHookChain):
 				return
 	elif base_obj.is_player:
 		set_skin_from_skin_manager(base_obj, Engine.get_singleton("VRAM_SkinsManager").get_player_skin_id(Enemy.EnemyType.CHAIN))
+		base_obj.enemy_fx.get_node("CASHParticles").emitting = Engine.get_singleton("VRAM_SkinsManager").get_player_skin_id(Enemy.EnemyType.CHAIN).contains("CASH")
 		return
 	set_skin_from_skin_manager(base_obj, "0") # Handle normal enemies
 

@@ -3,11 +3,13 @@ extends Object
 func handle_skin(chain: ModLoaderHookChain):
 	var base_obj = chain.reference_object as BatBot
 	
+	base_obj.enemy_fx.get_node("CASHParticles").emitting = false
 	if not base_obj.override_skin.is_empty():
 		base_obj.sprite.texture = Util.get_cached_texture(base_obj.override_skin)
 		return
 	if base_obj.is_player:
 		set_skin_from_skin_manager(base_obj, Engine.get_singleton("VRAM_SkinsManager").get_player_skin_id(Enemy.EnemyType.BAT))
+		base_obj.enemy_fx.get_node("CASHParticles").emitting = Engine.get_singleton("VRAM_SkinsManager").get_player_skin_id(Enemy.EnemyType.BAT).contains("CASH")
 		return
 	set_skin_from_skin_manager(base_obj, "0") # Handle normal enemies
 
