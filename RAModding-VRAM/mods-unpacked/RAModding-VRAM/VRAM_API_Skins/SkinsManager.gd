@@ -72,21 +72,21 @@ func port_vanilla_main_skins():
 		if !bot_skins.has(curr_bot_type):
 			bot_skins[curr_bot_type] = {}
 	for i in range(Progression.steeltoe_skins.size()):
-		bot_skins[Enemy.EnemyType.SHOTGUN]["%s" % i] = Progression.steeltoe_skins[i]
+		register_skin(Enemy.EnemyType.SHOTGUN, "%s" % i, Progression.steeltoe_skins[i]["name"], Progression.steeltoe_skins[i]["flavour_text"], Progression.steeltoe_skins[i]["unlock_requirements"], Progression.steeltoe_skins[i]["path"], Progression.steeltoe_skins[i]["colour"], Progression.steeltoe_skins[i]["sprite_sheet_path"], "", Progression.steeltoe_skins[i].get("unlock_flag", "unlocked_by_default"), Progression.steeltoe_skins[i].get("hide_before_unlocked", false), {})		
 	for i in range(Progression.deadlift_skins.size()):
-		bot_skins[Enemy.EnemyType.CHAIN]["%s" % i] = Progression.deadlift_skins[i]
+		register_skin(Enemy.EnemyType.CHAIN, "%s" % i, Progression.deadlift_skins[i]["name"], Progression.deadlift_skins[i]["flavour_text"], Progression.deadlift_skins[i]["unlock_requirements"], Progression.deadlift_skins[i]["path"], Progression.deadlift_skins[i]["colour"], Progression.deadlift_skins[i]["sprite_sheet_path"], Progression.deadlift_skins[i]["secondary_sprite_sheet_path"], Progression.deadlift_skins[i].get("unlock_flag", "unlocked_by_default"), Progression.deadlift_skins[i].get("hide_before_unlocked", false), {})
 	for i in range(Progression.router_skins.size()):
-		bot_skins[Enemy.EnemyType.WHEEL]["%s" % i] = Progression.router_skins[i]
+		register_skin(Enemy.EnemyType.WHEEL, "%s" % i, Progression.router_skins[i]["name"], Progression.router_skins[i]["flavour_text"], Progression.router_skins[i]["unlock_requirements"], Progression.router_skins[i]["path"], Progression.router_skins[i]["colour"], Progression.router_skins[i]["sprite_sheet_path"], "", Progression.router_skins[i].get("unlock_flag", "unlocked_by_default"), Progression.router_skins[i].get("hide_before_unlocked", false), {})
 	for i in range(Progression.aphid_skins.size()):
-		bot_skins[Enemy.EnemyType.FLAME]["%s" % i] = Progression.aphid_skins[i]
+		register_skin(Enemy.EnemyType.FLAME, "%s" % i, Progression.aphid_skins[i]["name"], Progression.aphid_skins[i]["flavour_text"], Progression.aphid_skins[i]["unlock_requirements"], Progression.aphid_skins[i]["path"], Progression.aphid_skins[i]["colour"], Progression.aphid_skins[i]["sprite_sheet_path"], Progression.aphid_skins[i]["secondary_sprite_sheet_path"], Progression.aphid_skins[i].get("unlock_flag", "unlocked_by_default"), Progression.aphid_skins[i].get("hide_before_unlocked", false), {})
 	for i in range(Progression.collider_skins.size()):
-		bot_skins[Enemy.EnemyType.SHIELD]["%s" % i] = Progression.collider_skins[i]
+		register_skin(Enemy.EnemyType.SHIELD, "%s" % i, Progression.collider_skins[i]["name"], Progression.collider_skins[i]["flavour_text"], Progression.collider_skins[i]["unlock_requirements"], Progression.collider_skins[i]["path"], Progression.collider_skins[i]["colour"], Progression.collider_skins[i]["sprite_sheet_path"], "", Progression.collider_skins[i].get("unlock_flag", "unlocked_by_default"), Progression.collider_skins[i].get("hide_before_unlocked", false), {})
 	for i in range(Progression.tachi_skins.size()):
-		bot_skins[Enemy.EnemyType.SABER]["%s" % i] = Progression.tachi_skins[i]
+		register_skin(Enemy.EnemyType.SABER, "%s" % i, Progression.tachi_skins[i]["name"], Progression.tachi_skins[i]["flavour_text"], Progression.tachi_skins[i]["unlock_requirements"], Progression.tachi_skins[i]["path"], Progression.tachi_skins[i]["colour"], Progression.tachi_skins[i]["sprite_sheet_path"], "", Progression.tachi_skins[i].get("unlock_flag", "unlocked_by_default"), Progression.tachi_skins[i].get("hide_before_unlocked", false), {})
 	for i in range(Progression.thistle_skins.size()):
-		bot_skins[Enemy.EnemyType.ARCHER]["%s" % i] = Progression.thistle_skins[i]
+		register_skin(Enemy.EnemyType.ARCHER, "%s" % i, Progression.thistle_skins[i]["name"], Progression.thistle_skins[i]["flavour_text"], Progression.thistle_skins[i]["unlock_requirements"], Progression.thistle_skins[i]["path"], Progression.thistle_skins[i]["colour"], Progression.thistle_skins[i]["sprite_sheet_path"], "", Progression.thistle_skins[i].get("unlock_flag", "unlocked_by_default"), Progression.thistle_skins[i].get("hide_before_unlocked", false), {})
 	for i in range(Progression.epitaph_skins.size()):
-		bot_skins[Enemy.EnemyType.BAT]["%s" % i] = Progression.epitaph_skins[i]
+		register_skin(Enemy.EnemyType.BAT, "%s" % i, Progression.epitaph_skins[i]["name"], Progression.epitaph_skins[i]["flavour_text"], Progression.epitaph_skins[i]["unlock_requirements"], Progression.epitaph_skins[i]["path"], Progression.epitaph_skins[i]["colour"], Progression.epitaph_skins[i]["sprite_sheet_path"], "", Progression.epitaph_skins[i].get("unlock_flag", "unlocked_by_default"), Progression.epitaph_skins[i].get("hide_before_unlocked", false), {})
 
 func port_thistle_bows():
 	bot_skins[Enemy.EnemyType.ARCHER]["0"]["secondary_sprite_sheet_path"] = "res://Art/Characters/hermitarcherRAM/spritesheet bow.png"
@@ -231,6 +231,7 @@ func floor_puzzle_completed():
 ## * spritesheet_path:				Path to the main spritesheet.
 ## * secondary_spritesheet_path:	Path to the secondary spritesheet, if applicable. Used for Deadlift arms, Aphid nozzles, Thistle bows, and Epitaph bats.
 ## * unlock_flag: 					Name of the flag controlling whether the skin is locked or unlocked. Should be unique to your mod, though not necessarily unique across all skins within a single mod. Suggested format: {namespace}_{mod name}_{fla name}
+## * hide_before_unlocked:			Whether to hide the skin before it is unlocked. Used by Puuko.
 ## * extra_data:					Additional data. Only used for mods.
 func register_skin(
 	bot_id: Enemy.EnemyType,
@@ -243,6 +244,7 @@ func register_skin(
 	spritesheet_path: String,
 	secondary_spritesheet_path: String = "",
 	unlock_flag: String = "unlocked_by_default",
+	hide_before_unlocked: bool = false,
 	extra_data : Dictionary = {}
 ):
 	if bot_id not in bot_skins: bot_skins[bot_id] = {}
@@ -256,6 +258,8 @@ func register_skin(
 		"unlock_flag"			: unlock_flag,
 		"extra_data"			: extra_data
 	}
+	if hide_before_unlocked:
+		bot_skins[bot_id][skin_id]["hide_before_unlocked"] = true
 	if (bot_id in [Enemy.EnemyType.CHAIN, Enemy.EnemyType.FLAME, Enemy.EnemyType.ARCHER, Enemy.EnemyType.BAT] || !secondary_spritesheet_path.is_empty()):
 		bot_skins[bot_id][skin_id]["secondary_sprite_sheet_path"] = secondary_spritesheet_path
 	if !skins_unlock_flags.has(unlock_flag):
@@ -304,6 +308,14 @@ func set_player_skin(bot_id: Enemy.EnemyType, skin_id: String):
 ## To get the actual player skin, use this as the skin_id for get_skin_or_default.
 func get_player_skin_id(bot_id: Enemy.EnemyType) -> String:
 	return player_skins[bot_id]
+
+## Gets the player's skin for the specified bot, or the default skin for the bot if not found.
+## 
+## Gets a Dictionary containing all data for the specified skin for the specified bot, or the skin with skin_id = "0". Specific fields should be accessed by the dict's keys.
+## Assumes that some skin has been registered with skin_id = "0". This is the case for all vanilla bots. Bots added with mods should also do this.
+## Further assumes that bot_id represents a bot that has had at least one skin registered, including all vanilla bots.
+func get_player_skin(bot_id: Enemy.EnemyType):
+	return bot_skins[bot_id].get(player_skins[bot_id], "0")
 
 ## Makes it so that Elites with the specified upgrade have the specified skin.
 ## 

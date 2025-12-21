@@ -1,11 +1,11 @@
 {
 	"dependencies": [],
-	"description": "Various RAM APIs for Modding (VRAM)\nBy Blackwater\n\nVRAM is a set of modding APIs designed to improve the modding experience.\nCurrently, VRAM supports:\n* Adding, unlocking, using skins\n* Adding and accessing save flags, and persisting them in your save file\n\nIn the future, VRAM is expected to support:\n* Adding and using upgrades\n* Adding custom animations to existing bots\n\nAdditional API suggestions are welcome, especially with test mods.",
+	"description": "Various RAM APIs for Modding (VRAM)\nBy Blackwater\n\nVRAM is a set of modding APIs designed to improve the modding experience.\nCurrently, VRAM supports:\n* Adding, unlocking, using skins\n* Adding and accessing save flags, and persisting them in your save file\n\nIn the future, VRAM is expected to support:\n* Adding and using upgrades\n* Adding custom animations to existing bots\n* Adding new bots\n\nAdditional API suggestions are welcome, especially with test mods.",
 	"extra": {
 		"godot": {
 			"authors": [
-				"Anonymous",
-				"Blackwater"
+				"Blackwater",
+				"Anonymous"
 			],
 			"compatible_game_version": [
 				"0.0.0"
@@ -22,7 +22,8 @@
 			"load_before": [],
 			"optional_dependencies": [],
 			"tags": [
-				"API"
+				"API",
+				"Modding tools"
 			]
 		}
 	},
