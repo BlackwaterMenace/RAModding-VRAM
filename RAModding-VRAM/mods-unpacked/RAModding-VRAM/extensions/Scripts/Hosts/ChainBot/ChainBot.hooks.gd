@@ -1,6 +1,7 @@
 extends Object
 
 func handle_skin(chain: ModLoaderHookChain):
+	print("HERE")
 	var base_obj = chain.reference_object as ChainBot
 	
 	if base_obj.ignore_skin: return
@@ -13,7 +14,7 @@ func handle_skin(chain: ModLoaderHookChain):
 				return
 	elif base_obj.is_player:
 		set_skin_from_skin_manager(base_obj, Engine.get_singleton("VRAM_SkinsManager").get_player_skin_id(Enemy.EnemyType.CHAIN))
-		base_obj.enemy_fx.get_node("CASHParticles").emitting = Engine.get_singleton("VRAM_SkinsManager").get_player_skin_id(Enemy.EnemyType.CHAIN).contains("CASH")
+		base_obj.enemy_fx.get_node("CASHParticles").emitting = Engine.get_singleton("VRAM_SkinsManager").get_player_skin(Enemy.EnemyType.CHAIN)["name"] == "CASH"
 		return
 	set_skin_from_skin_manager(base_obj, "0") # Handle normal enemies
 

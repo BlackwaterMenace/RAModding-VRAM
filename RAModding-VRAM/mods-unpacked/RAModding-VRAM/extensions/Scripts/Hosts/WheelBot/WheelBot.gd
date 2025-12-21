@@ -10,7 +10,7 @@ func handle_skin():
 				return
 	elif is_player:
 		set_skin_from_skin_manager(Engine.get_singleton("VRAM_SkinsManager").get_player_skin_id(Enemy.EnemyType.WHEEL))
-		enemy_fx.get_node("CASHParticles").emitting = Engine.get_singleton("VRAM_SkinsManager").get_player_skin_id(Enemy.EnemyType.WHEEL).contains("CASH")
+		enemy_fx.get_node("CASHParticles").emitting = Engine.get_singleton("VRAM_SkinsManager").get_player_skin(Enemy.EnemyType.WHEEL)["name"] == "CASH"
 		return
 	set_skin_from_skin_manager("0") # Handle normal enemies
 

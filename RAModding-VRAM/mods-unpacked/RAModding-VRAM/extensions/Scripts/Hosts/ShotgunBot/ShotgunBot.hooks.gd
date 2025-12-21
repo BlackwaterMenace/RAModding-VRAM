@@ -12,7 +12,7 @@ func handle_skin(chain: ModLoaderHookChain):
 				return
 	elif base_obj.is_player:
 		set_skin_from_skin_manager(base_obj, Engine.get_singleton("VRAM_SkinsManager").get_player_skin_id(Enemy.EnemyType.SHOTGUN))
-		base_obj.enemy_fx.get_node("CASHParticles").emitting = Engine.get_singleton("VRAM_SkinsManager").get_player_skin_id(Enemy.EnemyType.SHOTGUN).contains("CASH")
+		base_obj.enemy_fx.get_node("CASHParticles").emitting = Engine.get_singleton("VRAM_SkinsManager").get_player_skin(Enemy.EnemyType.SHOTGUN)["name"] == "CASH";
 		return
 	set_skin_from_skin_manager(base_obj, "0") # Handle normal enemies
 

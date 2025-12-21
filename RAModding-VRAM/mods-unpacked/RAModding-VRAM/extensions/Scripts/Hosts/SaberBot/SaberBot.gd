@@ -14,7 +14,7 @@ func handle_skin():
 	elif is_player:
 		if GameManager.player_tachi_skin_path != "":
 			set_skin_from_skin_manager(Engine.get_singleton("VRAM_SkinsManager").get_player_skin_id(Enemy.EnemyType.SABER))
-			enemy_fx.get_node("CASHParticles").emitting = Engine.get_singleton("VRAM_SkinsManager").get_player_skin_id(Enemy.EnemyType.SABER).contains("CASH")
+			enemy_fx.get_node("CASHParticles").emitting = Engine.get_singleton("VRAM_SkinsManager").get_player_skin(Enemy.EnemyType.SABER)["name"] == "CASH"
 			return
 	set_skin_from_skin_manager("0")
 

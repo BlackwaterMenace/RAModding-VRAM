@@ -8,7 +8,7 @@ func handle_skin():
 		return
 	if is_player:
 		set_skin_from_skin_manager(Engine.get_singleton("VRAM_SkinsManager").get_player_skin_id(Enemy.EnemyType.ARCHER))
-		enemy_fx.get_node("CASHParticles").emitting = Engine.get_singleton("VRAM_SkinsManager").get_player_skin_id(Enemy.EnemyType.ARCHER).contains("CASH")
+		enemy_fx.get_node("CASHParticles").emitting = Engine.get_singleton("VRAM_SkinsManager").get_player_skin(Enemy.EnemyType.ARCHER)["name"] == "CASH"
 		return
 	set_skin_from_skin_manager("0")
 
