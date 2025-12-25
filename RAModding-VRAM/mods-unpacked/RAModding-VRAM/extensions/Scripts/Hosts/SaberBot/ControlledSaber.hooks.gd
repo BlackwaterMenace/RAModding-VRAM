@@ -9,4 +9,5 @@ func set_source(chain: ModLoaderHookChain, source_):
 func get_free_saber(chain: ModLoaderHookChain):
 	var free_saber = chain.execute_next()
 	free_saber.get_node("Sprite2D").modulate = (chain.reference_object as ControlledSaber).get_node("Sprite2D").modulate
+	free_saber.get_node("Sprite2D2").modulate = (chain.reference_object as ControlledSaber).get_node("Sprite2D").modulate
 	return free_saber
